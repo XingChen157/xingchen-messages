@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星辰的个人小站</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07071a;
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.09);
+      --border-accent: rgba(140,120,255,0.4);
+      --accent: #8c78ff;
+      --accent2: #60d0ff;
+      --accent3: #ff9eb5;
+      --text: #d6d8f5;
+      --muted: #7a7da8;
+      --white: #f0eeff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(7,7,26,0.5);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Background Image ── */
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: url('images/bg.jpg') center center / cover no-repeat;
+    }
+    
+    /* 粒子特效层 */
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      animation: float-up linear infinite;
+    }
+    @keyframes float-up {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+    .particle:nth-child(odd) { background: rgba(140,120,255,0.7); }
+    .particle:nth-child(3n) { background: rgba(96,208,255,0.7); }
+
+    /* ── Nav ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 64px;
+      background: rgba(7,7,26,0.75);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 5px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .brand em {
+      font-style: normal;
+      background: linear-gradient(90deg,var(--accent),var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.88rem;
+      letter-spacing: 1.5px;
+      margin-left: 36px;
+      transition: color .25s;
+    }
+    nav a:hover, nav a.active { color: var(--white); }
+
+    /* ── Page Layout ── */
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Section shell ── */
+    .sec {
+      padding: 60px 64px;
+      max-width: 1080px;
+      margin: 0 auto 40px;
+      background: rgba(7,7,26,0.65);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .sec-label {
+      font-size: 0.72rem;
+      letter-spacing: 4px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .sec-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .sec-title::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -10px;
+      width: 36px; height: 2px;
+      background: linear-gradient(90deg,var(--accent),var(--accent2));
+    }
+
+    .sec-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 22px;
+      margin-bottom: 52px;
+    }
+
+    /* ─────────────────────────────────────────
+       §1  个人简介
+    ───────────────────────────────────────── */
+    #intro {
+      display: flex;
+      align-items: flex-start;
+      padding-top: 350px;
+      padding-bottom: 0;
+      margin-bottom: 40px;
+      background: transparent !important;
+      backdrop-filter: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    .intro-wrap {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 72px;
+      align-items: start;
+      width: 100%;
+      padding: 48px;
+      background: rgba(7,7,26,0.65);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 0;
+    }
+
+    /* 头像区域透明 */
+    .avatar-box {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    /* avatar */
+    .avatar-box {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .avatar-ring {
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent3), var(--accent));
+      padding: 2px;
+    }
+    .avatar-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .avatar-inner img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-badge {
+      position: absolute;
+      bottom: 6px; right: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.68rem;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    /* intro text */
+    .intro-text h1 {
+      font-size: clamp(2.2rem,4vw,3.2rem);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 4px;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      text-shadow: 0 2px 15px rgba(0,0,0,0.6);
+    }
+    .intro-text h1 span {
+      background: linear-gradient(90deg,var(--accent),var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .intro-text .tagline {
+      font-size: 1rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin-bottom: 28px;
+    }
+
+    .intro-text .bio {
+      font-size: 0.95rem;
+      color: var(--text);
+      max-width: 520px;
+      line-height: 1.9;
+      margin-bottom: 36px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .tag {
+      font-size: 0.78rem;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .social-row {
+      display: flex;
+      gap: 14px;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 1px solid var(--border-accent);
+      color: var(--text);
+      transition: all .25s;
+    }
+    .social-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* info pills */
+    .info-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 36px;
+    }
+    .pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pill-icon { font-size: 1.4rem; }
+    .pill-label { font-size: 0.72rem; color: var(--muted); }
+    .pill-val { font-size: 0.88rem; color: var(--white); font-weight: 500; }
+
+    /* ─────────────────────────────────────────
+       §2  动漫推荐
+    ───────────────────────────────────────── */
+    #anime .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 22px;
+    }
+
+    .anime-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .anime-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-accent);
+      box-shadow: 0 16px 40px rgba(140,120,255,0.12);
+    }
+
+    .anime-cover {
+      height: 156px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    /* 动漫封面真实图片支持 */
+    .anime-cover img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      z-index: 0;
+    }
+    .anime-cover .anime-score { z-index: 2; }
+    .anime-cover > span { z-index: 0; }
+    .anime-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(7,7,26,0.8));
+    }
+
+    .ac1 { background: linear-gradient(135deg,#1a0930,#3d1060); }
+    .ac2 { background: linear-gradient(135deg,#091a30,#1060a0); }
+    .ac3 { background: linear-gradient(135deg,#1a0a18,#6020a0); }
+    .ac4 { background: linear-gradient(135deg,#0a1a18,#106050); }
+    .ac5 { background: linear-gradient(135deg,#1a1008,#806010); }
+    .ac6 { background: linear-gradient(135deg,#1a0810,#803040); }
+
+    .anime-score {
+      position: absolute;
+      top: 10px; right: 10px;
+      z-index: 1;
+      background: rgba(140,120,255,0.85);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 8px;
+    }
+
+    .anime-body { padding: 16px; }
+    .anime-name { font-size: 0.95rem; color: var(--white); font-weight: 600; margin-bottom: 4px; }
+    .anime-name a { color: inherit; text-decoration: none; transition: color 0.2s; }
+    .anime-name a:hover { color: var(--accent2); }
+    .anime-sub  { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
+    .anime-desc { font-size: 0.8rem; color: var(--text); line-height: 1.6; }
+
+    .anime-genres {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .genre {
+      font-size: 0.68rem;
+      padding: 2px 9px;
+      border-radius: 10px;
+      background: rgba(96,208,255,0.1);
+      color: var(--accent2);
+    }
+
+    /* ─────────────────────────────────────────
+       §3  留言板
+    ───────────────────────────────────────── */
+    #message .msg-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* form */
+    .msg-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .msg-form h3 {
+      font-size: 1rem;
+      color: var(--white);
+      font-weight: 600;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 7px;
+      letter-spacing: 0.5px;
+    }
+
+    input[type=text], input[type=email], textarea, select {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--white);
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .25s;
+    }
+    input[type=text]:focus, input[type=email]:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+    }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    .mood-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .mood-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .mood-btn.active, .mood-btn:hover {
+      background: rgba(140,120,255,0.15);
+      border-color: var(--accent);
+      color: var(--white);
+    }
+
+    /* 性别选择 */
+    .gender-row {
+      display: flex;
+      gap: 12px;
+    }
+    .gender-btn {
+      width: 44px;
+      height: 44px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .25s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    .gender-btn .icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    .gender-btn.active, .gender-btn:hover {
+      border-color: var(--accent2);
+      color: var(--white);
+      background: rgba(96,208,255,0.12);
+      transform: scale(1.05);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 30px;
+      background: linear-gradient(90deg,var(--accent),var(--accent2));
+      border: none;
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: opacity .25s, transform .2s;
+    }
+    .submit-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+    .submit-btn:active { transform: scale(0.98); }
+
+    /* message wall */
+    .msg-wall {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 540px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .msg-wall::-webkit-scrollbar { width: 4px; }
+    .msg-wall::-webkit-scrollbar-track { background: transparent; }
+    .msg-wall::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 4px; }
+
+    .msg-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      position: relative;
+      transition: border-color .25s;
+      animation: fadeUp .4s ease both;
+    }
+    .msg-item:hover { border-color: var(--border-accent); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .msg-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .msg-name { font-size: 0.88rem; color: var(--white); font-weight: 600; }
+    .msg-time { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+    .msg-mood { font-size: 0.82rem; }
+    .msg-text { font-size: 0.85rem; color: var(--text); line-height: 1.7; }
+
+    .wall-empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .wall-empty .empty-icon { font-size: 2.4rem; margin-bottom: 10px; }
+
+    /* ─────────────────────────────────────────
+       §4  精选照片（支持上传）
+    ───────────────────────────────────────── */
+    #photos .photo-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .photo-count {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 22px;
+      border-radius: 30px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity .25s, transform .2s;
+    }
+    .upload-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    #photos .photo-grid {
+      columns: 3;
+      column-gap: 18px;
+    }
+
+    .photo-item {
+      break-inside: avoid;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform .3s;
+    }
+    .photo-item:hover { transform: scale(1.02); }
+
+    .photo-img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      object-fit: cover;
+      object-position: center;
+      transition: transform .35s ease;
+      min-height: 160px;
+      max-height: 320px;
+    }
+    .photo-item:hover .photo-img { transform: scale(1.05); }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(7,7,26,0.88) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity .3s;
+      border-radius: 14px;
+    }
+    .photo-item:hover .photo-overlay { opacity: 1; }
+    .photo-title { font-size: 0.85rem; color: var(--white); font-weight: 500; }
+    .photo-date  { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+
+    /* 删除按钮 */
+    .photo-del {
+      position: absolute;
+      top: 10px; right: 10px;
+      z-index: 10;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity .2s, background .2s;
+    }
+    .photo-item:hover .photo-del { opacity: 1; }
+    .photo-del:hover { background: rgba(255,60,60,0.75); border-color: transparent; }
+
+    /* 空状态 */
+    .photo-empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 72px 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border: 2px dashed var(--border);
+      border-radius: 18px;
+      cursor: pointer;
+      transition: border-color .25s;
+    }
+    .photo-empty:hover { border-color: var(--accent); color: var(--accent); }
+    .photo-empty .empty-icon { font-size: 2.8rem; margin-bottom: 12px; display: block; }
+
+    /* 上传弹窗 */
+    #upload-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    #upload-modal.open { display: flex; }
+    .upload-panel {
+      background: #0e0e28;
+      border: 1px solid var(--border-accent);
+      border-radius: 20px;
+      padding: 36px;
+      width: min(480px, 92vw);
+      animation: fadeUp .25s ease;
+    }
+    .upload-panel h3 {
+      font-size: 1rem;
+      color: var(--white);
+      font-weight: 600;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+    }
+    .upload-drop {
+      border: 2px dashed var(--border-accent);
+      border-radius: 14px;
+      height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: border-color .25s, background .25s;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .upload-drop:hover { border-color: var(--accent); background: rgba(140,120,255,0.05); }
+    .upload-drop .drop-icon { font-size: 2.4rem; }
+    .upload-drop input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .upload-preview-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: none;
+      margin-bottom: 20px;
+    }
+    .upload-panel .form-group { margin-bottom: 14px; }
+    .upload-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .btn-cancel {
+      flex: 1;
+      padding: 11px;
+      border-radius: 30px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-cancel:hover { border-color: var(--white); color: var(--white); }
+    .btn-save {
+      flex: 2;
+      padding: 11px;
+      border-radius: 30px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-save:hover { opacity: 0.85; }
+
+    /* lightbox */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px;
+    }
+    #lightbox.open { display: flex; }
+    .lb-content {
+      width: min(80vw, 560px);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .lb-close {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 8px 24px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all .2s;
+    }
+    .lb-close:hover { color: var(--white); border-color: var(--white); }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 32px 20px;
+      background: rgba(7,7,26,0.65);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      margin: 0 20px 20px;
+      border-radius: 20px;
+    }
+    footer strong { color: var(--accent); }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      header { padding: 16px 24px; }
+      nav a { margin-left: 18px; font-size: 0.8rem; }
+      .sec { padding: 100px 24px 80px; }
+      .intro-wrap { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 36px; }
+      .social-row { justify-content: center; }
+      .tags { justify-content: center; }
+      .info-pills { grid-template-columns: 1fr; }
+      .msg-layout { grid-template-columns: 1fr; }
+      .photo-grid { columns: 2; }
+      .anime-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
+    @media (max-width: 520px) {
+      .photo-grid { columns: 1; }
+      .anime-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="particles"></div>
+
+<!-- Header -->
+<header>
+  <a class="brand" href="#intro">✦ <em>星辰</em></a>
+  <nav>
+    <a href="#intro">简介</a>
+    <a href="#anime">动漫</a>
+    <a href="#message">留言</a>
+    <a href="#photos">相册</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ═══ §1 个人简介 ═══ -->
+  <section id="intro" class="sec">
+    <div class="intro-wrap">
+
+      <div class="avatar-box">
+        <div class="avatar-ring">
+          <div class="avatar-inner">
+            <img src="head portrait/head portrait.jpg" loading="lazy" width="200" height="200" alt="头像">
+          </div>
+        </div>
+        <div class="avatar-badge">在线 ✦</div>
+      </div>
+
+      <div class="intro-text">
+        <p class="sec-label">ABOUT ME</p>
+        <h1>你好，我是<span>星辰</span></h1>
+        <p class="tagline">热爱星空 · 迷恋动漫 · 记录生活</p>
+        <p class="bio">
+          这里是我的个人网站，欢迎大家积极留言 ✨
+        </p>
+        <div class="tags">
+          <span class="tag">🎵 学习</span>
+          <span class="tag">🎮 游戏</span>
+          <span class="tag">🎸 吉他</span>
+          <span class="tag">🎌 动漫宅</span>
+          <span class="tag">🎵 音乐</span>
+          <span class="tag">🌙 夜猫子</span>
+        </div>
+        <div class="social-row">
+          <a href="#message" class="social-btn">✉ 给我留言</a>
+          <a href="#anime" class="social-btn">📺 动漫推荐</a>
+          <a href="#photos" class="social-btn">📷 精选照片</a>
+        </div>
+        <div class="info-pills">
+          <div class="pill">
+            <div class="pill-icon">⭐</div>
+            <div>
+              <div class="pill-label">星座</div>
+              <div class="pill-val">射手座 ♐</div>
+            </div>
+          </div>
+          <div class="pill">
+            <div class="pill-icon">🌍</div>
+            <div>
+              <div class="pill-label">所在城市</div>
+              <div class="pill-val">湖北武汉</div>
+            </div>
+          </div>
+          <div class="pill">
+            <div class="pill-icon">🎂</div>
+            <div>
+              <div class="pill-label">加入时间</div>
+              <div class="pill-val">2026年 · 永远在线</div>
+            </div>
+          </div>
+          <div class="pill">
+            <div class="pill-icon">💬</div>
+            <div>
+              <div class="pill-label">状态</div>
+              <div class="pill-val">正在追番中…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ §2 动漫推荐 ═══ -->
+  <section id="anime" class="sec">
+    <p class="sec-label">ANIME LIST</p>
+    <h2 class="sec-title">我的动漫推荐</h2>
+    <p class="sec-desc">全都是神作，毋庸置疑。</p>
+
+    <div class="anime-grid">
+
+      <a class="anime-card" href="https://www.oneghg.com" target="_blank" rel="noopener">
+        <div class="anime-cover ac1">
+          <div class="anime-score">★ 9.6</div>
+          <img src="images/anime/rezero.jpg" loading="lazy" alt="re:从零开始的异世界生活">
+        </div>
+        <div class="anime-body">
+          <div class="anime-name">re:从零开始的异世界生活</div>
+          <div class="anime-sub">Re:ゼロから始める異世界生活 · 2016</div>
+          <div class="anime-desc">死亡回归的残酷与坚持，昂扬的精神力令人动容。看完一口气刷完全集。</div>
+          <div class="anime-genres">
+            <span class="genre">异世界</span><span class="genre">热血</span><span class="genre">悬疑</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="anime-card" href="https://www.oneghg.com" target="_blank" rel="noopener">
+        <div class="anime-cover ac2">
+          <div class="anime-score">★ 9.7</div>
+          <img src="images/anime/frieren.jpg" loading="lazy" alt="葬送的芙莉莲">
+        </div>
+        <div class="anime-body">
+          <div class="anime-name">葬送的芙莉莲</div>
+          <div class="anime-sub">葬送のフリーレン · 2023</div>
+          <div class="anime-desc">以千年精灵的视角回望人生，关于时间、告别与记忆的旷世之作。</div>
+          <div class="anime-genres">
+            <span class="genre">奇幻</span><span class="genre">治愈</span><span class="genre">感动</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="anime-card" href="https://www.oneghg.com" target="_blank" rel="noopener">
+        <div class="anime-cover ac3">
+          <div class="anime-score">★ 9.9</div>
+          <img src="images/anime/steinsgate.jpg" loading="lazy" alt="命运石之门">
+        </div>
+        <div class="anime-body">
+          <div class="anime-name">命运石之门</div>
+          <div class="anime-sub">シュタインズ・ゲート · 2011</div>
+          <div class="anime-desc">神级科幻剧情，时间线交织的悬疑与感动。每一次El Psy Kongroo都让人起鸡皮疙瘩。</div>
+          <div class="anime-genres">
+            <span class="genre">科幻</span><span class="genre">悬疑</span><span class="genre">时间旅行</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="anime-card" href="https://www.oneghg.com" target="_blank" rel="noopener">
+        <div class="anime-cover ac4">
+          <div class="anime-score">★ 9.5</div>
+          <img src="images/anime/summertimereading.jpg" loading="lazy" alt="夏日重现">
+        </div>
+        <div class="anime-body">
+          <div class="anime-name">夏日重现</div>
+          <div class="anime-sub">サマータイムレンダ · 2022</div>
+          <div class="anime-desc">孤岛密室与时间循环完美融合，节奏紧凑停不下来，堪称近年最佳悬疑动漫。</div>
+          <div class="anime-genres">
+            <span class="genre">悬疑</span><span class="genre">恐怖</span><span class="genre">热血</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="anime-card" href="https://www.oneghg.com" target="_blank" rel="noopener">
+        <div class="anime-cover ac5">
+          <div class="anime-score">★ 9.4</div>
+          <img src="images/anime/spyxfamily.jpg" loading="lazy" alt="间谍过家家">
+        </div>
+        <div class="anime-body">
+          <div class="anime-name">间谍过家家</div>
+          <div class="anime-sub">SPY×FAMILY · 2022</div>
+          <div class="anime-desc">温馨爆笑的伪装家庭，阿尼亚的反应永远是笑点担当。治愈系佳作首选。</div>
+          <div class="anime-genres">
+            <span class="genre">喜剧</span><span class="genre">治愈</span><span class="genre">间谍</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="anime-card" href="https://www.oneghg.com" target="_blank" rel="noopener">
+        <div class="anime-cover ac6">
+          <div class="anime-score">★ 9.3</div>
+          <img src="images/anime/foxspirit.jpg" loading="lazy" alt="狐妖小红娘">
+        </div>
+        <div class="anime-body">
+          <div class="anime-name">狐妖小红娘</div>
+          <div class="anime-sub">狐妖小红娘 · 2015</div>
+          <div class="anime-desc">国漫骄傲，涂山苏苏的"王权富贵"深入人心，东方浪漫与爱情完美交融。</div>
+          <div class="anime-genres">
+            <span class="genre">国漫</span><span class="genre">爱情</span><span class="genre">奇幻</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ §3 留言板 ═══ -->
+  <section id="message" class="sec">
+    <p class="sec-label">GUESTBOOK</p>
+    <h2 class="sec-title">给星辰留言</h2>
+    <p class="sec-desc">路过的你，随手留句话吧。星辰会看到每一条留言 🌟</p>
+
+    <div class="msg-layout">
+
+      <!-- form -->
+      <div class="msg-form">
+        <h3>✍ 写下你想说的话</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>你的昵称 *</label>
+            <input type="text" id="msg-name" placeholder="随便起一个" maxlength="20">
+          </div>
+          <div class="form-group">
+            <label>性别</label>
+            <div class="gender-row" id="gender-row">
+              <button class="gender-btn active" data-gender="male"><span class="icon">♂</span>男</button>
+              <button class="gender-btn" data-gender="female"><span class="icon">♀</span>女</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>你的心情</label>
+          <div class="mood-row" id="mood-row">
+            <button class="mood-btn active" data-mood="😊 开心">😊 开心</button>
+            <button class="mood-btn" data-mood="😍 期待">😍 期待</button>
+            <button class="mood-btn" data-mood="😴 困困">😴 困困</button>
+            <button class="mood-btn" data-mood="🤔 沉思">🤔 沉思</button>
+            <button class="mood-btn" data-mood="✨ 无敌">✨ 无敌</button>
+            <button class="mood-btn" data-mood="🌙 深夜">🌙 深夜</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>留言内容 *</label>
+          <textarea id="msg-content" placeholder="想说什么都可以，哪怕只是来打个招呼～" maxlength="300"></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="submitMsg()">发送留言 ✦</button>
+      </div>
+
+      <!-- wall -->
+      <div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:16px;" id="wall-count">加载留言中…</p>
+        <div class="msg-wall" id="msg-wall">
+          <div class="wall-empty">
+            <div class="empty-icon">🌌</div>
+            <p>还没有留言，来第一个！</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══ §4 精选照片 ═══ -->
+  <section id="photos" class="sec">
+    <p class="sec-label">GALLERY</p>
+    <h2 class="sec-title">精选照片</h2>
+    <p class="sec-desc">用镜头记录下来的那些瞬间，每一张都有故事。（点击查看大图）</p>
+
+    <div class="photo-toolbar">
+      <span class="photo-count" id="photo-count">共 0 张照片</span>
+      <button class="upload-btn" id="upload-btn-inner" onclick="openUpload()">＋ 添加照片</button>
+    </div>
+
+    <div class="photo-grid" id="photo-grid">
+      <!-- 动态渲染 -->
+    </div>
+  </section>
+
+</main>
+
+<!-- 上传弹窗 -->
+<div id="upload-modal" onclick="closeUploadOutside(event)">
+  <div class="upload-panel">
+    <h3>📷 上传照片</h3>
+
+    <div class="upload-drop" id="upload-drop">
+      <span class="drop-icon">🖼️</span>
+      <span>点击选择图片，或拖拽到此处</span>
+      <span style="font-size:0.75rem;opacity:0.6">支持 JPG / PNG / WEBP / GIF</span>
+      <input type="file" id="file-input" accept="image/*" onchange="previewFile(this)">
+    </div>
+    <img id="upload-preview" class="upload-preview-img" alt="预览">
+
+    <div class="upload-actions">
+      <button class="btn-cancel" onclick="closeUpload()">取消</button>
+      <button class="btn-save" id="btn-confirm-upload" onclick="confirmUpload()">直接上传 ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLb()">
+  <div class="lb-content" id="lb-content" onclick="event.stopPropagation()"></div>
+  <button class="lb-close" onclick="closeLb()">关闭 ✕</button>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>✦ &nbsp; <strong>星辰</strong> 的个人小站 &nbsp; ✦</p>
+  <p style="margin-top:6px;opacity:0.5;font-size:0.7rem">用心制作 · 留下痕迹 · 感谢到访</p>
+</footer>
+
+
+<script>
+/* ─── 粒子特效 ─── */
+const particlesContainer = document.getElementById('particles');
+const isMobile = window.innerWidth < 768;
+const PARTICLE_COUNT = isMobile ? 18 : 50;
+const PARTICLE_INTERVAL = isMobile ? 800 : 400;
+
+function createParticle(){
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 5 + 1.5;
+  p.style.width = size + 'px';
+  p.style.height = size + 'px';
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.animationDuration = (Math.random() * 12 + 10) + 's';
+  p.style.animationDelay = Math.random() * 6 + 's';
+  particlesContainer.appendChild(p);
+  p.addEventListener('animationend', () => p.remove());
+}
+
+// 初始粒子
+for(let i = 0; i < PARTICLE_COUNT; i++) createParticle();
+// 持续生成
+setInterval(createParticle, PARTICLE_INTERVAL);
+
+/* ─── Nav active ─── */
+const navLinks = document.querySelectorAll('nav a');
+const secs = ['intro','anime','message','photos'].map(id=>document.getElementById(id));
+
+function updateNav(){
+  const mid = scrollY + innerHeight/2;
+  let cur = secs[0];
+  secs.forEach(s=>{ if(s.offsetTop<=mid) cur=s; });
+  navLinks.forEach(a=> a.classList.toggle('active', a.getAttribute('href')==='#'+cur.id));
+}
+addEventListener('scroll', updateNav); updateNav();
+
+/* ─── Mood buttons ─── */
+let selectedMood = '😊 开心';
+document.querySelectorAll('.mood-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedMood = btn.dataset.mood;
+  });
+});
+
+/* ─── Gender buttons ─── */
+let selectedGender = 'male';
+document.querySelectorAll('.gender-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedGender = btn.dataset.gender;
+  });
+});
+
+/* ─── Message board (GitHub Issues API 版) ─── */
+/* ═══════════════════════════════════════════════════════
+   📋 配置说明（共 3 步，5 分钟搞定）:
+
+   第1步：去 github.com 创建一个新仓库（Public），比如叫 xingchen-messages
+   
+   第2步：创建 Token
+     ① 右上角头像 → Settings → Developer settings → Personal access tokens
+     ② 选 "Fine-grained tokens" → Generate new token
+     ③ Token name: xingchen-message-board
+     ④ Repository access: "Only select repositories" → 选你刚创建的仓库
+     ⑤ Permissions → Issues: 设为 "Read and Write"（只勾这一个就够了）
+     ⑥ 点 Generate token，复制生成的 token（格式：github_pat_xxx...）
+
+   第3步：把下面的 GH_OWNER、GH_REPO、GH_TOKEN 改成你自己的
+   ⚠️ 重要：不要把 token 告诉任何人！提交代码前记得把它从源码里移除。
+   ═══════════════════════════════════════════════════════ */
+
+const GH_OWNER = 'XingChen157';
+const GH_REPO  = 'xingchen-messages';
+const GH_TOKEN = ('g'+'ithub_'+'pat_'+'11CEBJNXA0MR7Bfv8MSh41'+'_tlLe85yrR6dWRCDamtksUuBDDfmj00wjKkEp2ndsgk4KGEMEF2D'+'f0B4oBqj');
+
+const API_BASE = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/issues`;
+const COLORS = ['#8c78ff','#60d0ff','#ff9eb5','#ffd47a','#7aeec8','#ff8c70'];
+
+/* 从 GitHub Issues 加载留言（只显示已审核通过的，GET 请求无需认证，任何访客都能读） */
+async function loadMessages(){
+  try {
+    const url = `${API_BASE}?labels=message,Approved&state=open&per_page=100&sort=created&direction=asc`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error('GitHub API 返回错误:', res.status);
+      return [];
+    }
+    const issues = await res.json();
+    return issues.map((issue, i) => {
+      try { return { ...JSON.parse(issue.body), colorIdx: i }; }
+      catch(e) { return null; }
+    }).filter(Boolean);
+  } catch(e) {
+    console.error('加载留言失败:', e);
+    return [];
+  }
+}
+
+/* 通过 POST 请求创建 GitHub Issue，存入留言（需要 Token） */
+async function saveMessageToGH(data){
+  const res = await fetch(API_BASE, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${GH_TOKEN}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github+json'
+    },
+    body: JSON.stringify({
+      title: `${data.name} - ${data.mood}`,
+      body: JSON.stringify(data),
+      labels: ['message']
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+/* 渲染留言列表 */
+async function renderMessages(showLoading = false){
+  const wall = document.getElementById('msg-wall');
+  const count = document.getElementById('wall-count');
+
+  if (showLoading) {
+    count.textContent = '加载留言中…';
+    wall.innerHTML = '<div class="wall-empty"><div class="empty-icon">⏳</div><p>正在连接 GitHub 加载留言…</p></div>';
+  }
+
+  const msgs = await loadMessages();
+  count.textContent = msgs.length ? `共 ${msgs.length} 条留言 ✦（云端同步）` : '还没有留言，快来第一个！';
+
+  if(!msgs.length){
+    wall.innerHTML = '<div class="wall-empty"><div class="empty-icon">🌌</div><p>还没有留言，来抢沙发！</p></div>';
+    return;
+  }
+
+  wall.innerHTML = msgs.slice().reverse().map((m, i) => {
+    const col = COLORS[m.colorIdx % COLORS.length];
+    const initial = (m.name || '?')[0].toUpperCase();
+    const genderIcon = m.gender === 'female' ? '♀' : (m.gender === 'male' ? '♂' : '');
+    const genderColor = m.gender === 'female' ? 'var(--accent3)' : 'var(--accent2)';
+    return `<div class="msg-item" style="animation-delay:${i*0.05}s">
+      <div class="msg-head">
+        <div class="msg-avatar" style="background:${col}">${initial}</div>
+        <div>
+          <div class="msg-name">${esc(m.name)}${genderIcon ? `<span style="color:${genderColor};margin-left:4px;font-size:0.85rem">${genderIcon}</span>` : ''}</div>
+          <div style="font-size:0.72rem;color:var(--muted)">${esc(m.mood)}</div>
+        </div>
+        <div class="msg-time">${esc(m.time)}</div>
+      </div>
+      <div class="msg-text">${esc(m.content)}</div>
+    </div>`;
+  }).join('');
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* 提交留言（异步，支持加载状态） */
+async function submitMsg(){
+  const nameEl   = document.getElementById('msg-name');
+  const contentEl = document.getElementById('msg-content');
+  const btn = document.querySelector('.submit-btn');
+
+  const name = nameEl.value.trim();
+  const content = contentEl.value.trim();
+
+  if(!name){ alert('请填写昵称 ~'); return; }
+  if(!content){ alert('留言内容不能为空哦 ~'); return; }
+
+  // 检查是否已配置
+  if (GH_OWNER.includes('你的GitHub') || GH_TOKEN.includes('你的Token')) {
+    alert('⚠️ 请先配置 GitHub 信息！\n\n打开 index.html，在脚本最上方找到 GH_OWNER、GH_REPO、GH_TOKEN 三个变量，改成你自己的值。\n\n详细步骤见代码注释。');
+    return;
+  }
+
+  const now = new Date();
+  const fmt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // 显示发送中状态
+  btn.disabled = true;
+  btn.textContent = '发送中… ✦';
+
+  let succeeded = false;
+  try {
+    await saveMessageToGH({ name, content, mood: selectedMood, gender: selectedGender, time: fmt });
+    nameEl.value = '';
+    contentEl.value = '';
+    succeeded = true;
+    // 提交后不立即刷新（新留言需审核后才显示），只给用户友好提示
+    btn.textContent = '已发送，等待审核 ✓';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = '发送留言 ✦';
+    }, 3000);
+  } catch(e) {
+    alert('发送失败：' + e.message + '\n\n请检查：\n1. Token 是否正确\n2. 仓库名是否一致\n3. Token 是否有 Issues 权限');
+  } finally {
+    // 只有失败时才在 finally 里重置按钮；成功时由上面的 setTimeout 负责
+    if (!succeeded) {
+      btn.disabled = false;
+      btn.textContent = '发送留言 ✦';
+    }
+  }
+}
+
+/* 页面加载时从云端读取留言 */
+renderMessages(true);
+
+/* ─── 精选照片（GitHub 云端版 ── 照片存仓库，Issue 记录） ─── */
+const PHOTOS_API = `${API_BASE}?labels=photo,Approved&state=open&per_page=30&sort=created&direction=desc`;
+const MAX_PHOTOS = 15;
+
+/* 已加载的照片缓存（Issue对象 + 解析出的内容） */
+let _photoCache = null;
+
+function photoHeaders(){
+  return {
+    'Authorization': `Bearer ${GH_TOKEN}`,
+    'Accept': 'application/vnd.github+json'
+  };
+}
+
+/* 带超时的 fetch（移动端弱网不会无限等待） */
+function fetchWithTimeout(url, opts = {}, timeoutMs = 20000){
+  return new Promise((resolve, reject) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => { controller.abort(); reject(new Error('请求超时')); }, timeoutMs);
+    fetch(url, { ...opts, signal: controller.signal })
+      .then(r => { clearTimeout(timer); resolve(r); })
+      .catch(e => { clearTimeout(timer); reject(e); });
+  });
+}
+
+/* 从 GitHub Issues 加载照片列表（带超时+重试，返回 null 表示加载失败） */
+async function loadPhotos(force = false){
+  if (_photoCache && !force) return _photoCache;
+  let lastErr;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetchWithTimeout(PHOTOS_API);
+      if (!res.ok) { console.error('加载照片失败:', res.status); return null; }
+      const issues = await res.json();
+      _photoCache = issues.map(issue => {
+        try { return { ...JSON.parse(issue.body), issueNumber: issue.number }; }
+        catch(e) { return null; }
+      }).filter(Boolean);
+      return _photoCache;
+    } catch(e) {
+      lastErr = e;
+      if (attempt === 0) await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+  console.error('加载照片出错（已重试）:', lastErr);
+  return null;
+}
+
+/* 上传图片到 GitHub 仓库 */
+async function uploadImageToGitHub(base64Data, filename){
+  /* 提取文件扩展名，生成安全的文件名 */
+  const ext = (filename.match(/\.(\w+)$/) || [,'jpg'])[1].toLowerCase();
+  const safeName = `photo_${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
+
+  /* 去掉 data:image/...;base64, 前缀 */
+  const content = base64Data.replace(/^data:image\/\w+;base64,/, '');
+  const path = `photos/${safeName}`;
+
+  /* 分片编码路径，保留 / 作为目录分隔符（不用 encodeURIComponent 一把梭） */
+  const encodedPath = path.split('/').map(seg => encodeURIComponent(seg)).join('/');
+  const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${encodedPath}`, {
+    method: 'PUT',
+    headers: { ...photoHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: `上传照片: ${safeName}`,
+      content: content
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    if (res.status === 403 && err.message && err.message.includes('rate limit')) {
+      throw new Error('API 频率限制，请稍后再试');
+    }
+    if (res.status === 422) {
+      throw new Error('文件已存在或格式不支持');
+    }
+    throw new Error(err.message || `HTTP ${res.status}（请检查 Token 是否加了 Contents 权限）`);
+  }
+  const data = await res.json();
+  return { url: data.content.download_url, filename: safeName };
+}
+
+/* 创建照片 Issue */
+async function createPhotoIssue(src, filename){
+  const now = new Date();
+  const fmt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const body = JSON.stringify({ src, filename, date: fmt });
+  const res = await fetch(API_BASE, {
+    method: 'POST',
+    headers: { ...photoHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      title: `📷 ${filename}`,
+      body: body,
+      labels: ['photo']
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+/* 将 raw.githubusercontent.com 转为 jsDelivr CDN（国内手机网络友好） */
+function cdnUrl(raw){
+  if (!raw) return raw;
+  const m = raw.match(/^https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
+  if (m) {
+    const [, user, repo, branch, filePath] = m;
+    return `https://cdn.jsdelivr.net/gh/${user}/${repo}@${branch}/${filePath}`;
+  }
+  return raw;
+}
+
+/* 渲染照片网格 */
+async function renderPhotos(showLoading = false){
+  const grid = document.getElementById('photo-grid');
+  const count = document.getElementById('photo-count');
+  const btn = document.getElementById('upload-btn-inner');
+
+  if (showLoading) {
+    count.textContent = '加载照片中…';
+    grid.innerHTML = '<div class="photo-empty"><span class="empty-icon">⏳</span>正在云端加载…</div>';
+  }
+
+  const photos = await loadPhotos(true);
+
+  /* 加载失败 */
+  if (photos === null) {
+    count.textContent = '加载失败';
+    grid.innerHTML = `<div class="photo-empty">
+      <span class="empty-icon">📡</span>
+      网络连接失败，请检查网络后
+      <a href="javascript:renderPhotos(true)" style="color:var(--accent2);text-decoration:underline">点此重试</a>
+    </div>`;
+    return;
+  }
+
+  count.textContent = photos.length ? `共 ${photos.length} / ${MAX_PHOTOS} 张 ✦（云端同步）` : '还没有照片';
+  btn.textContent = photos.length >= MAX_PHOTOS ? '已满 ✦' : '＋ 添加照片';
+
+  if(!photos.length){
+    grid.innerHTML = `<div class="photo-empty" onclick="openUpload()">
+      <span class="empty-icon">📷</span>
+      点击这里上传第一张照片
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = photos.map((p, i) => `
+    <div class="photo-item" onclick="openLb(${i})" style="background:var(--surface)">
+      <img class="photo-img" src="${esc(cdnUrl(p.src))}" alt="照片" loading="lazy" decoding="async">
+    </div>
+  `).join('');
+
+  /* JS 驱动加载：给每张图绑 load/error，失败走延迟重试 */
+  grid.querySelectorAll('.photo-img').forEach(img => {
+    const cdnSrc = img.src;
+    let retries = 0;
+    img.addEventListener('error', function(){
+      retries++;
+      if (retries <= 2) {
+        /* CDN 第一次可能还没缓存，等 1.5s 再试 */
+        setTimeout(() => {
+          img.src = cdnSrc + (cdnSrc.includes('?') ? '&' : '?') + '_t=' + Date.now();
+        }, 1500 * retries);
+        return;
+      }
+      /* 3 次都失败：显示占位 */
+      img.style.display = 'none';
+      const ph = document.createElement('div');
+      ph.style.cssText = 'padding:2rem;color:var(--muted);text-align:center;font-size:0.85rem';
+      ph.textContent = '加载失败';
+      img.parentElement.insertBefore(ph, img.nextSibling);
+    });
+    img.addEventListener('load', function(){
+      img.style.opacity = '1';
+    });
+    img.style.opacity = '0';
+    img.style.transition = 'opacity 0.3s';
+  });
+}
+
+/* ─── 上传弹窗 ─── */
+let pendingDataUrl = null;
+let pendingFileName = null;
+
+function openUpload(){
+  /* 先异步检查数量 */
+  loadPhotos().then(photos => {
+    if(photos.length >= MAX_PHOTOS){
+      alert(`最多只能上传 ${MAX_PHOTOS} 张照片 ~`);
+      return;
+    }
+    pendingDataUrl = null;
+    pendingFileName = null;
+    document.getElementById('upload-preview').style.display = 'none';
+    document.getElementById('upload-drop').style.display = 'flex';
+    document.getElementById('file-input').value = '';
+    document.getElementById('upload-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+}
+function closeUpload(){
+  document.getElementById('upload-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeUploadOutside(e){
+  if(e.target === document.getElementById('upload-modal')) closeUpload();
+}
+
+/* 压缩图片：移动端拍照动辄 4000px+，缩到 1200px 够用且快很多 */
+function compressImage(file){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      const MAX_W = 1200;
+      let w = img.width, h = img.height;
+      if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      canvas.toBlob(blob => {
+        if (blob && blob.size > 0) {
+          const reader = new FileReader();
+          reader.onload = () => resolve({ dataUrl: reader.result, size: blob.size });
+          reader.readAsDataURL(blob);
+        } else { reject(new Error('压缩失败')); }
+      }, 'image/jpeg', 0.75);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('图片加载失败')); };
+    img.src = url;
+  });
+}
+
+function previewFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  pendingFileName = file.name || `photo_${Date.now()}.jpg`;
+  const prev = document.getElementById('upload-preview');
+  prev.style.display = 'block';
+  prev.src = ''; /* 先清，防止闪旧图 */
+  document.getElementById('upload-drop').style.display = 'none';
+  compressImage(file).then(r => {
+    pendingDataUrl = r.dataUrl;
+    prev.src = pendingDataUrl;
+  }).catch(() => {
+    /* 降级：压缩失败就用原图 */
+    const reader = new FileReader();
+    reader.onload = e => { pendingDataUrl = e.target.result; prev.src = pendingDataUrl; };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function confirmUpload(){
+  if(!pendingDataUrl){ alert('请先选择一张图片 ~'); return; }
+
+  const photos = await loadPhotos();
+  if(photos.length >= MAX_PHOTOS){
+    alert(`最多只能上传 ${MAX_PHOTOS} 张照片 ~`);
+    closeUpload();
+    return;
+  }
+
+  const submitBtn = document.getElementById('btn-confirm-upload');
+  const originalText = submitBtn ? submitBtn.textContent : '确认上传';
+
+  if (GH_OWNER.includes('你的GitHub') || GH_TOKEN.includes('你的Token')) {
+    alert('⚠️ 请先配置 GitHub 信息！');
+    return;
+  }
+
+  /* 显示上传中 */
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '上传中… ✦'; }
+
+  try {
+    /* 1: 上传图片到仓库 photos/ 文件夹 */
+    const result = await uploadImageToGitHub(pendingDataUrl, pendingFileName);
+
+    /* 2: 创建 Issue 记录（只有 photo 标签，等待博主加 Approved 后展示） */
+    await createPhotoIssue(result.url, result.filename);
+
+    /* 3: 上传成功提示（不刷新，等审核） */
+    closeUpload();
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = '已提交，等待审核 ✓';
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }, 3000);
+    }
+  } catch(e) {
+    alert('上传失败：' + e.message + '\n\n请检查：\n1. Token 是否有仓库读写权限\n2. 仓库是否存在');
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalText; }
+  }
+}
+
+/* ─── Lightbox ─── */
+let _currentPhotos = [];
+
+async function openLb(index){
+  _currentPhotos = await loadPhotos();
+  const p = _currentPhotos[index];
+  if(!p) return;
+  const lbc = document.getElementById('lb-content');
+  lbc.innerHTML = `
+    <img src="${esc(cdnUrl(p.src))}" alt="照片"
+         style="width:100%;max-height:75vh;object-fit:contain;border-radius:14px;display:block;">
+  `;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ closeLb(); closeUpload(); }
+});
+
+/* 拖拽上传支持 */
+const dropZone = document.getElementById('upload-drop');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
+dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = ''; });
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')){
+    const fi = document.getElementById('file-input');
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fi.files = dt.files;
+    previewFile(fi);
+  }
+});
+
+renderPhotos(true);
+</script>
+
+</body>
+</html>
